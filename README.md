@@ -1,4 +1,4 @@
-# env-object [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
+# env-entity [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
 A typescript lib leveraging decorator to create objects contain env vars;
 
