@@ -1,2 +1,2 @@
-export * from './env-object';
-export * from './env-prop';
+export * from './env-entity'
+export * from './env-prop'
