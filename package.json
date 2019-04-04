@@ -7,6 +7,14 @@
     "type": "git",
     "url": "https://github.com/ndthanhdev/env-entity.git"
   },
+  "keywords": [
+    "env",
+    "var",
+    "entity"
+  ],
+  "bugs": {
+    "url": "https://github.com/ndthanhdev/env-entity/issues"
+  },
   "scripts": {
     "test": "jest",
     "build": "tsc -p tsconfig.json",
