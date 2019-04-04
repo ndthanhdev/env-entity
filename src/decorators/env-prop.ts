@@ -13,7 +13,7 @@ export const EnvProp = (envPath: string): PropertyDecorator => {
     } else {
       Reflect.defineMetadata(
         ENV_PROPERTY_METADATA,
-        [propertykey, ...metadata],
+        [...metadata, propertykey],
         target
       )
     }

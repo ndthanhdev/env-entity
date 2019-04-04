@@ -4,8 +4,10 @@ A typescript lib leveraging decorator to create objects contain env vars;
 
 # Usage
 
+## Basic use case
+
 ```typescript
-@EnvObject
+@EnvEntity()
 class Env {
   @EnvProp('FOO')
   foo: string
@@ -14,54 +16,44 @@ class Env {
   bar: string
 }
 
-const env = getEnvObject(Env)
+const env = getEnvEntity(Env)
 env.foo === process.env.FOO // true
+```
+
+## Using with base path
+
+```typescript
+@EnvEntity('FOO_')
+class Env {
+  @EnvProp('BAR')
+  bar: string
+}
+env.bar === process.env.FOO_BAR
 ```
 
 # Roadmap
 
-- Deep path.
-
-```typescript
-@EnvObject
-class Env {
-  @EnvProp('FOO.BAR')
-  foo: number
-}
-```
-
 - Type checking
 
 ```typescript
-@EnvObject
+@EnvEntity
 class Env {
   @EnvProp('FOO')
   foo: number
 }
 process.env.foo = 'abc' // NaN
-getEnvObject(Env) // throw error
+getEnvEntity(Env) // throw error
 ```
 
-- Base path
+- Nested EnvEntity
 
 ```typescript
-@EnvObject('FOO')
-class Env {
-  @EnvProp('BAR')
-  bar: string
-}
-env.bar === process.env.FOO.BAR // true
-```
-
-- Nested EnvObject
-
-```typescript
-@EnvObject
+@EnvEntity
 class FOO {
   @EnvProp('FOO')
   foo: string
 }
-@EnvObject
+@EnvEntity
 class BAR {
   @EnvProp('BAR')
   bar: string
