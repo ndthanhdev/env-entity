@@ -2,41 +2,56 @@ import { EnvEntity, EnvProp } from '../../src/decorators'
 
 it('Object should be define without any error', () => {
   @EnvEntity()
-  class AClass {}
+  class Env {}
 
-  const aObject = new AClass()
+  const o = new Env()
 
-  expect(aObject).toBeDefined()
+  expect(o).toBeDefined()
 })
 
-it('Properties should have correct env value', () => {
-  process.env['FOO'] = 'FOO_VALUE'
-  process.env['BAR'] = 'BAR_VALUE'
-  @EnvEntity()
-  class AClass {
-    @EnvProp('FOO')
-    foo: string
+it('Properties should have correct env values', () => {
+  const num = 123
+  const str = 'Lorem Ipsum'
+  const date = new Date('2019-01-01')
+  const arr = [num, str, date]
 
-    @EnvProp('BAR')
-    bar: string
+  process.env['NUM'] = JSON.stringify(num)
+  process.env['STR'] = JSON.stringify(str)
+  process.env['DATE'] = JSON.stringify(date)
+  process.env['ARR'] = JSON.stringify(date)
+  @EnvEntity()
+  class Env {
+    @EnvProp('NUM')
+    num: number
+
+    @EnvProp('STR')
+    str: string
+
+    @EnvProp('DATE')
+    date: Date
+
+    @EnvProp('ARR')
+    arr: []
   }
 
-  const aObject = new AClass()
+  const o = new Env()
 
-  expect(aObject.foo).toStrictEqual('FOO_VALUE')
-  expect(aObject.bar).toStrictEqual('BAR_VALUE')
+  expect(o.num).toStrictEqual(num)
+  expect(o.str).toStrictEqual(str)
+  expect(o.date).toStrictEqual(date)
+  expect(o.arr).toStrictEqual(arr)
 })
 
-it('Base path object shoudl have correct value', () => {
+it('Base path object should have correct value', () => {
   const value = 'VALUE'
   process.env['FOO_BAR'] = value
   @EnvEntity('FOO_')
-  class AClass {
+  class Env {
     @EnvProp('BAR')
-    foorBar: string
+    fooBar: string
   }
 
-  const aObject = new AClass()
+  const o = new Env()
 
-  expect(aObject.foorBar).toStrictEqual(value)
+  expect(o.fooBar).toStrictEqual(value)
 })
