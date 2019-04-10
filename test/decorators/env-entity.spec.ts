@@ -14,11 +14,18 @@ it('Properties should have correct env values', () => {
   const str = 'Lorem Ipsum'
   const date = new Date('2019-01-01')
   const arr = [num, str, date.toString()]
+  // const obj = {
+  //   num,
+  //   str,
+  //   date,
+  //   arr,
+  // }
 
   process.env['NUM'] = JSON.stringify(num)
   process.env['STR'] = str
   process.env['DATE'] = date.toString()
   process.env['ARR'] = JSON.stringify(arr)
+  // process.env['OBJ'] = JSON.stringify(obj)
   @EnvEntity()
   class Env {
     @EnvProp('NUM')
@@ -33,14 +40,18 @@ it('Properties should have correct env values', () => {
     @EnvProp('ARR')
     arr: []
 
+    // @EnvProp('OBJ')
+    // obj: any
+
   }
 
-  const o = new Env()
+  const env = new Env()
 
-  expect(o.num).toStrictEqual(num)
-  expect(o.str).toStrictEqual(str)
-  expect(o.date).toStrictEqual(date)
-  expect(o.arr).toStrictEqual(arr)
+  expect(env.num).toStrictEqual(num)
+  expect(env.str).toStrictEqual(str)
+  expect(env.date).toStrictEqual(date)
+  expect(env.arr).toStrictEqual(arr)
+  // expect(env.obj).toStrictEqual(obj)
 })
 
 it('Base path object should have correct value', () => {
