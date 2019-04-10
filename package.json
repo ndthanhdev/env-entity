@@ -20,8 +20,12 @@
     "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
     "build": "rimraf dist/ && tsc -p tsconfig.json",
     "prepublish": "npm run build",
-    "lint": "tslint -p tsconfig.json -c tslint.json",
-    "lint:fix": "tslint -p tsconfig.json -c tslint.json --fix",
+    "lint": "npm run lint:src && npm run lint:test",
+    "lint:fix": "npm run lint:src:fix && npm run lint:test:fix",
+    "lint:src": "tslint -p tsconfig.json -c tslint.json",
+    "lint:src:fix": "tslint -p tsconfig.json -c tslint.json --fix",
+    "lint:test": "tslint -p test/tsconfig.json -c tslint.json",
+    "lint:test:fix": "tslint -p test/tsconfig.json -c tslint.json --fix",
     "prettify": "prettier \"**/*.{json,ts,tsx}\"",
     "prettify:fix": "prettier --write \"**/*.{json,ts,tsx}\""
   },
@@ -49,12 +53,12 @@
     }
   },
   "lint-staged": {
-    "*.{ts}": [
+    "**/*.{ts}": [
       "npm run lint:fix",
       "prettier --write",
       "git add"
     ],
-    "*.{js,json,md}": [
+    "**/*.{js,json,md}": [
       "prettier --write",
       "git add"
     ]
