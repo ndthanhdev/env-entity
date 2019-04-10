@@ -8,8 +8,6 @@ function getEntityMetadata(target: any) {
 
 function castStringToPropType(input: string|undefined, type: PropType) {
   if (input) {
-    console.log(input);
-    console.log(type);
     switch (type) {
       case Number:
         return +input
