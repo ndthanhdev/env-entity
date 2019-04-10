@@ -13,12 +13,12 @@ it('Properties should have correct env values', () => {
   const num = 123
   const str = 'Lorem Ipsum'
   const date = new Date('2019-01-01')
-  const arr = [num, str, date]
+  const arr = [num, str, date.toString()]
 
   process.env['NUM'] = JSON.stringify(num)
-  process.env['STR'] = JSON.stringify(str)
-  process.env['DATE'] = JSON.stringify(date)
-  process.env['ARR'] = JSON.stringify(date)
+  process.env['STR'] = str
+  process.env['DATE'] = date.toString()
+  process.env['ARR'] = JSON.stringify(arr)
   @EnvEntity()
   class Env {
     @EnvProp('NUM')
@@ -32,6 +32,7 @@ it('Properties should have correct env values', () => {
 
     @EnvProp('ARR')
     arr: []
+
   }
 
   const o = new Env()

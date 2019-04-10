@@ -17,6 +17,7 @@
   },
   "scripts": {
     "test": "jest",
+    "test:debug": "node --inspect-brk ./node_modules/jest/bin/jest.js --runInBand",
     "build": "rimraf dist/ && tsc -p tsconfig.json",
     "prepublish": "npm run build",
     "lint": "tslint -p tsconfig.json -c tslint.json",

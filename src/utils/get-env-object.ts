@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { Type } from '../interfaces/type'
+import { Type } from '../types/type'
 
 export const getEnvObject = <T>(metaType: Type<T>): T => {
   return new metaType()
