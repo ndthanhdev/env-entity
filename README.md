@@ -1,26 +1,23 @@
 # env-entity [![TypeScript](https://badges.frapsoft.com/typescript/code/typescript.svg?v=101)](https://github.com/ellerbrock/typescript-badges/)
 
-A typescript lib leveraging decorator to create objects contain env vars;
+A typescript lib leveraging decorator to create objects contain env vars
 
 # Usage
-
-## Basic use case
 
 ```typescript
 @EnvEntity()
 class Env {
   @EnvProp('FOO')
-  foo: string
+  foo: number
 
   @EnvProp('BAR')
   bar: string
 }
 
 const env = getEnvEntity(Env)
-env.foo === process.env.FOO // true
 ```
 
-## Using with base path
+## Base path
 
 ```typescript
 @EnvEntity('FOO_')
@@ -31,20 +28,30 @@ class Env {
 env.bar === process.env.FOO_BAR
 ```
 
-# Roadmap
-
-- Type checking
+## Parsing
 
 ```typescript
-@EnvEntity
+@EnvEntity()
 class Env {
-  @EnvProp('FOO')
-  foo: number
+  @EnvProp('NUM')
+  num: number // process.env.NUM=123
+
+  @EnvProp('STR')
+  str: string // process.env.STR="string"
+
+  @EnvProp('DATE')
+  date: Date // process.env.DATE="2019-01-01"
+
+  @EnvProp('ARR')
+  arr: [] // process.env.ARR="[1,\"2\",3]"
 }
-process.env.foo = 'abc' // NaN
-getEnvEntity(Env) // throw error
 ```
 
+# Roadmap
+
+- Validating using [Joi](https://www.npmjs.com/package/joi)
+- Default values
+  When env vars can't parse or validate they will be set default values instead of throw errors.
 - Nested EnvEntity
 
 ```typescript
@@ -59,5 +66,4 @@ class BAR {
   bar: string
   foo: FOO
 }
-env.foo.foo === process.env.FOO // true
 ```

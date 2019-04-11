@@ -1,6 +1,24 @@
-import { EnvEntity, EnvProp } from '../../src/decorators'
+import { EnvEntity, Prop } from '../../src/decorators'
+import { ValueIsNotAnArray, ValueIsNotANumber } from '../../src/exceptions'
 
-it('Object should be define without any error', () => {
+let num: number
+let str: string
+let date: Date
+let arr: Array<any>
+
+beforeEach(() => {
+  num = 123
+  str = 'Lorem Ipsum'
+  date = new Date('2019-01-01')
+  arr = [num, str, date.toString()]
+
+  process.env['NUM'] = JSON.stringify(num)
+  process.env['STR'] = str
+  process.env['DATE'] = date.toString()
+  process.env['ARR'] = JSON.stringify(arr)
+})
+
+it('object should be define without any error', () => {
   @EnvEntity()
   class Env {}
 
@@ -9,40 +27,34 @@ it('Object should be define without any error', () => {
   expect(o).toBeDefined()
 })
 
-it('Properties should have correct env values', () => {
-  const num = 123
-  const str = 'Lorem Ipsum'
-  const date = new Date('2019-01-01')
-  const arr = [num, str, date.toString()]
-  // const obj = {
-  //   num,
-  //   str,
-  //   date,
-  //   arr,
-  // }
+it('base path object should have correct value', () => {
+  const value = 'VALUE'
+  process.env['FOO_BAR'] = value
+  @EnvEntity('FOO_')
+  class Env {
+    @Prop('BAR')
+    fooBar: string
+  }
 
-  process.env['NUM'] = JSON.stringify(num)
-  process.env['STR'] = str
-  process.env['DATE'] = date.toString()
-  process.env['ARR'] = JSON.stringify(arr)
-  // process.env['OBJ'] = JSON.stringify(obj)
+  const o = new Env()
+
+  expect(o.fooBar).toStrictEqual(value)
+})
+
+it('properties should have correct env values', () => {
   @EnvEntity()
   class Env {
-    @EnvProp('NUM')
+    @Prop('NUM')
     num: number
 
-    @EnvProp('STR')
+    @Prop('STR')
     str: string
 
-    @EnvProp('DATE')
+    @Prop('DATE')
     date: Date
 
-    @EnvProp('ARR')
+    @Prop('ARR')
     arr: []
-
-    // @EnvProp('OBJ')
-    // obj: any
-
   }
 
   const env = new Env()
@@ -51,19 +63,24 @@ it('Properties should have correct env values', () => {
   expect(env.str).toStrictEqual(str)
   expect(env.date).toStrictEqual(date)
   expect(env.arr).toStrictEqual(arr)
-  // expect(env.obj).toStrictEqual(obj)
 })
 
-it('Base path object should have correct value', () => {
-  const value = 'VALUE'
-  process.env['FOO_BAR'] = value
-  @EnvEntity('FOO_')
+it('throw NaN', () => {
+  process.env['NUM'] = 'this is not a number'
+  @EnvEntity()
   class Env {
-    @EnvProp('BAR')
-    fooBar: string
+    @Prop('NUM')
+    num: number
   }
+  expect(() => new Env()).toThrowError(new ValueIsNotANumber())
+})
 
-  const o = new Env()
-
-  expect(o.fooBar).toStrictEqual(value)
+it('throw ValueIsNotAnArray', () => {
+  process.env['ARR'] = '"this is not an array"'
+  @EnvEntity()
+  class Env {
+    @Prop('ARR')
+    arr: []
+  }
+  expect(() => new Env()).toThrowError(new ValueIsNotAnArray())
 })

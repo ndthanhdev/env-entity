@@ -49,7 +49,7 @@ function generatePropMetadata(
   }
 }
 
-export const EnvProp = (envPath: string): PropertyDecorator => {
+export const Prop = (envPath: string): PropertyDecorator => {
   return (target, propKey) => {
     const propMetadata = generatePropMetadata(target, propKey, envPath)
     setOrExtendEntityMetadata(target, propMetadata)

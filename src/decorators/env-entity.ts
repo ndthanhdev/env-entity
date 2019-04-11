@@ -1,31 +1,46 @@
 import 'reflect-metadata'
 import { ENV_ENTITY } from '../utils/constants'
 import { EntityMetadata, PropMetadata, PropType } from '../types'
+import { ValueIsNotAnArray } from '../exceptions';
+import { ValueIsNotANumber } from '../exceptions/not-a-number';
 
 function getEntityMetadata(target: any) {
   return Reflect.getMetadata(ENV_ENTITY, target) as EntityMetadata | undefined
 }
 
-function castStringToPropType(input: string|undefined, type: PropType) {
+function parseNumberOrThrow(input: string) {
+  const output = Number(input)
+  if (Number.isNaN(output)) throw new ValueIsNotANumber()
+  return output
+}
+
+function parseArrayOrThrow(input: string) {
+  const output = JSON.parse(input)
+  if (!(output instanceof Array)) throw new ValueIsNotAnArray()
+  return output
+}
+
+function castStringToPropType(input: string | undefined, type: PropType) {
   if (input) {
     switch (type) {
       case Number:
-        return +input
+        return parseNumberOrThrow(input)
       case Date:
         return new Date(input)
       case Array:
-        return [].concat(JSON.parse(input))
+        return parseArrayOrThrow(input)
       case String:
-        return input
-      case Object:
       default:
-        return JSON.parse(input)
+        return input
     }
   }
 }
 
 function setProp(target: any, metadata: PropMetadata, basePath: string) {
-  target[metadata.propKey] = castStringToPropType(process.env[`${basePath}${metadata.path}`], metadata.type)
+  target[metadata.propKey] = castStringToPropType(
+    process.env[`${basePath}${metadata.path}`],
+    metadata.type
+  )
 }
 
 export const EnvEntity = (basePath: string = '') =>
