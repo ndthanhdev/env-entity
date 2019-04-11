@@ -1,42 +1,86 @@
-import { EnvEntity, EnvProp } from '../../src/decorators'
+import { EnvEntity, Prop } from '../../src/decorators'
+import { ValueIsNotAnArray, ValueIsNotANumber } from '../../src/exceptions'
 
-it('Object should be define without any error', () => {
-  @EnvEntity()
-  class AClass {}
+let num: number
+let str: string
+let date: Date
+let arr: Array<any>
 
-  const aObject = new AClass()
+beforeEach(() => {
+  num = 123
+  str = 'Lorem Ipsum'
+  date = new Date('2019-01-01')
+  arr = [num, str, date.toString()]
 
-  expect(aObject).toBeDefined()
+  process.env['NUM'] = JSON.stringify(num)
+  process.env['STR'] = str
+  process.env['DATE'] = date.toString()
+  process.env['ARR'] = JSON.stringify(arr)
 })
 
-it('Properties should have correct env value', () => {
-  process.env['FOO'] = 'FOO_VALUE'
-  process.env['BAR'] = 'BAR_VALUE'
+it('object should be define without any error', () => {
   @EnvEntity()
-  class AClass {
-    @EnvProp('FOO')
-    foo: string
+  class Env {}
 
-    @EnvProp('BAR')
-    bar: string
-  }
+  const o = new Env()
 
-  const aObject = new AClass()
-
-  expect(aObject.foo).toStrictEqual('FOO_VALUE')
-  expect(aObject.bar).toStrictEqual('BAR_VALUE')
+  expect(o).toBeDefined()
 })
 
-it('Base path object shoudl have correct value', () => {
+it('base path object should have correct value', () => {
   const value = 'VALUE'
   process.env['FOO_BAR'] = value
   @EnvEntity('FOO_')
-  class AClass {
-    @EnvProp('BAR')
-    foorBar: string
+  class Env {
+    @Prop('BAR')
+    fooBar: string
   }
 
-  const aObject = new AClass()
+  const o = new Env()
 
-  expect(aObject.foorBar).toStrictEqual(value)
+  expect(o.fooBar).toStrictEqual(value)
+})
+
+it('properties should have correct env values', () => {
+  @EnvEntity()
+  class Env {
+    @Prop('NUM')
+    num: number
+
+    @Prop('STR')
+    str: string
+
+    @Prop('DATE')
+    date: Date
+
+    @Prop('ARR')
+    arr: []
+  }
+
+  const env = new Env()
+
+  expect(env.num).toStrictEqual(num)
+  expect(env.str).toStrictEqual(str)
+  expect(env.date).toStrictEqual(date)
+  expect(env.arr).toStrictEqual(arr)
+})
+
+it('throw NaN', () => {
+  process.env['NUM'] = 'this is not a number'
+  @EnvEntity()
+  class Env {
+    @Prop('NUM')
+    num: number
+  }
+  expect(() => new Env()).toThrowError(new ValueIsNotANumber())
+})
+
+it('throw ValueIsNotAnArray', () => {
+  process.env['ARR'] = '"this is not an array"'
+  @EnvEntity()
+  class Env {
+    @Prop('ARR')
+    arr: []
+  }
+  expect(() => new Env()).toThrowError(new ValueIsNotAnArray())
 })
