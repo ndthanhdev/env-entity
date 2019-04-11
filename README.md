@@ -7,10 +7,10 @@ A typescript lib leveraging decorator to create objects contain env vars
 ```typescript
 @EnvEntity()
 class Env {
-  @EnvProp('FOO')
+  @Prop('FOO')
   foo: number
 
-  @EnvProp('BAR')
+  @Prop('BAR')
   bar: string
 }
 
@@ -22,7 +22,7 @@ const env = getEnvEntity(Env)
 ```typescript
 @EnvEntity('FOO_')
 class Env {
-  @EnvProp('BAR')
+  @Prop('BAR')
   bar: string
 }
 env.bar === process.env.FOO_BAR
@@ -33,17 +33,21 @@ env.bar === process.env.FOO_BAR
 ```typescript
 @EnvEntity()
 class Env {
-  @EnvProp('NUM')
-  num: number // process.env.NUM=123
+  // process.env.NUM=123
+  @Prop('NUM')
+  num: number
 
-  @EnvProp('STR')
-  str: string // process.env.STR="string"
+  // process.env.STR="string"
+  @Prop('STR')
+  str: string
 
-  @EnvProp('DATE')
-  date: Date // process.env.DATE="2019-01-01"
+  // process.env.DATE="2019-01-01"
+  @Prop('DATE')
+  date: Date
 
-  @EnvProp('ARR')
-  arr: [] // process.env.ARR="[1,\"2\",3]"
+  // process.env.ARR="[1,\"2\",3]"
+  @Prop('ARR')
+  arr: []
 }
 ```
 
@@ -57,12 +61,12 @@ class Env {
 ```typescript
 @EnvEntity
 class FOO {
-  @EnvProp('FOO')
+  @Prop('FOO')
   foo: string
 }
 @EnvEntity
 class BAR {
-  @EnvProp('BAR')
+  @Prop('BAR')
   bar: string
   foo: FOO
 }
